@@ -1,46 +1,47 @@
 package com.sv.demo.rest.json;
 
 import com.sv.demo.dto.Student;
-import java.util.Collections;
-import java.util.HashSet;
+import com.sv.demo.service.StudentService;
 import java.util.Set;
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 @Path("/student")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class StudentResource {
 
-    private final Set<Student> students = Collections.synchronizedSet(new HashSet<>());
+    @Inject
+    StudentService studentService;
 
     @GET
     @Path("/list")
     public Set<Student> list() {
-        return students;
+        return studentService.findAll();
     }
 
     @GET
     @Path("/{id}")
     public Student getById(@PathParam("id") long id) {
-        return students.stream()
-                .filter(student -> student.getId() == id)
-                .findFirst()
-                .orElseThrow(NotFoundException::new);
+        return studentService.findById(id);
     }
 
     @POST
     public Student add(Student student) {
-        students.add(student);
-        return student;
+        return studentService.add(student);
     }
 
     @DELETE
     @Path("/{id}")
     public void delete(@PathParam("id") long id) {
-        students.removeIf(student -> student.getId() == id);
+        studentService.delete(id);
     }
 
 }

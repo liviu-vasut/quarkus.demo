@@ -15,6 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.eclipse.microprofile.faulttolerance.Retry;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
@@ -34,7 +35,9 @@ public class StudentResource {
     @GET
     @Path("/list")
     @Timed(name = "listTimer", description = "How long it takes to list students (ms).", unit = MetricUnits.MILLISECONDS)
-    public Set<Student> list() {
+    @Timeout(250)
+    public Set<Student> list() throws InterruptedException {
+        Thread.sleep(new Random().nextInt(500));
         return studentService.findAll();
     }
 

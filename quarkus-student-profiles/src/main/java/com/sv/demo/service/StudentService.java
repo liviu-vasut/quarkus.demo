@@ -27,7 +27,7 @@ public class StudentService {
 
     public StudentProfile getProfileByName(String name) {
         return studentProfiles.stream()
-                .filter(student -> student.getName().equals(name))
+                .filter(student -> student.getName().equalsIgnoreCase(name))
                 .findFirst()
                 .orElseThrow(NotFoundException::new);
     }

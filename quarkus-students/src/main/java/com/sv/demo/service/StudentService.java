@@ -5,10 +5,17 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 @ApplicationScoped
 public class StudentService {
+
+    @Inject
+    @Channel("student")
+    Emitter<String> studentEmitter;
 
     private final Set<Student> students = Collections.synchronizedSet(new HashSet<>());
 
@@ -25,6 +32,7 @@ public class StudentService {
 
     public Student add(Student student) {
         students.add(student);
+        studentEmitter.send(student.getName());
         return student;
     }
 

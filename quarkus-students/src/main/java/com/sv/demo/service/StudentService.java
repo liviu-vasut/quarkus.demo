@@ -7,6 +7,8 @@ import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
+import org.eclipse.microprofile.metrics.MetricUnits;
+import org.eclipse.microprofile.metrics.annotation.Gauge;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
@@ -39,4 +41,10 @@ public class StudentService {
     public void delete(long id) {
         students.removeIf(f -> f.getId() == id);
     }
+
+    @Gauge(name = "dbCount", unit = MetricUnits.NONE, description = "Database element count.")
+    public int databaseSize() {
+        return students.size();
+    }
+
 }

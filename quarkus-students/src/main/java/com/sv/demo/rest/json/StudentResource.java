@@ -12,6 +12,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.eclipse.microprofile.metrics.MetricUnits;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
 @Path("/student")
 @Produces(MediaType.APPLICATION_JSON)
@@ -23,12 +26,14 @@ public class StudentResource {
 
     @GET
     @Path("/list")
+    @Timed(name = "listTimer", description = "How long it takes to list students (ms).", unit = MetricUnits.MILLISECONDS)
     public Set<Student> list() {
         return studentService.findAll();
     }
 
     @GET
     @Path("/{id}")
+    @Counted(name = "getByIdCount", description = "How many calls to the getById endpoint.")
     public Student getById(@PathParam("id") long id) {
         return studentService.findById(id);
     }

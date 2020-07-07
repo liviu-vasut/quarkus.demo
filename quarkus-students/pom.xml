@@ -64,6 +64,11 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-fault-tolerance</artifactId>
     </dependency>
+    <dependency>
+      <!-- required only for centralized logging -->
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-logging-gelf</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

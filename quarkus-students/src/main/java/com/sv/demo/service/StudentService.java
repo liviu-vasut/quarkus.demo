@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.InternalServerErrorException;
+import javax.inject.Named;
 import javax.ws.rs.NotFoundException;
 import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
 import org.eclipse.microprofile.metrics.MetricUnits;
@@ -21,6 +21,10 @@ public class StudentService {
     @Inject
     @Channel("student")
     Emitter<String> studentEmitter;
+
+    @Inject
+    @Named("countErrorGenerator")
+    Runnable countErrorGenerator;
 
     private final AtomicLong requestCounter = new AtomicLong(0);
 
@@ -39,10 +43,7 @@ public class StudentService {
 
     @CircuitBreaker(requestVolumeThreshold = 4)
     public Student findByName(String name) {
-        final long invocationNumber = requestCounter.getAndIncrement();
-        if (invocationNumber % 4 > 1) { // alternate 2 successful and 2 failing invocations
-            throw new InternalServerErrorException("Simulated failure for name " + name);
-        }
+        countErrorGenerator.run();
         return students.stream()
                 .filter(student -> student.getName().equalsIgnoreCase(name))
                 .findFirst()

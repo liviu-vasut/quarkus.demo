@@ -14,9 +14,13 @@ import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Gauge;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 public class StudentService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(StudentService.class);
 
     @Inject
     @Channel("student")
@@ -53,6 +57,7 @@ public class StudentService {
     public Student add(Student student) {
         students.add(student);
         studentEmitter.send(student.getName());
+        LOG.info("Added student {}", student.getName());
         return student;
     }
 

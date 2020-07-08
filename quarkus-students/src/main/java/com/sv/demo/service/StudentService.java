@@ -13,6 +13,7 @@ import javax.ws.rs.NotFoundException;
 import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Gauge;
+import org.eclipse.microprofile.opentracing.Traced;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Message;
@@ -58,6 +59,7 @@ public class StudentService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    @Traced
     public Student add(Student student) {
         students.add(student);
         //one could also @Inject a Tracer and get the id from there, but it's rather cumbersome and more hacky than this

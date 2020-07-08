@@ -19,6 +19,7 @@ import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
+import org.eclipse.microprofile.opentracing.Traced;
 
 @Path("/student")
 @Produces(MediaType.APPLICATION_JSON)
@@ -61,6 +62,7 @@ public class StudentResource {
     }
 
     @POST
+    @Traced
     public Student add(Student student) {
         return studentService.add(student);
     }

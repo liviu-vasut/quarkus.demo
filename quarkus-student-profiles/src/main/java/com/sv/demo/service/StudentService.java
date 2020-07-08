@@ -9,6 +9,7 @@ import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
+import org.eclipse.microprofile.opentracing.Traced;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -27,6 +28,7 @@ public class StudentService {
     @RestClient
     private ProfileClient profileClient;
 
+    @Traced
     @Incoming("student")
     public CompletionStage<Void> receive(Message<String> message) {
         StudentProfile profile = profileClient.getByName(message.getPayload());

@@ -56,3 +56,12 @@ podman run -it --rm -p 8161:8161 -p 5672:5672 vromero/activemq-artemis:2.8.0-alp
 ```
 
 There is a management console at http://0.0.0.0:8161/console, you can login using the credentials from the `application.properties` file.
+
+### Logstash
+
+```bash
+podman run -it --rm -v /tmp/logstash.conf:/usr/share/logstash/pipeline/logstash.conf -p 12201:12201/udp docker.io/library/logstash:7.8.0
+```
+
+The pipeline configuration is stored in `quarkus-students/logstash/logstash.conf` and should be copied in a path readable by the container (e.g. `/tmp/`) before running it. You can do that manually or use the provided shell script from within the same directory.
+

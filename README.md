@@ -65,3 +65,11 @@ podman run -it --rm -v /tmp/logstash.conf:/usr/share/logstash/pipeline/logstash.
 
 The pipeline configuration is stored in `quarkus-students/logstash/logstash.conf` and should be copied in a path readable by the container (e.g. `/tmp/`) before running it. You can do that manually or use the provided shell script from within the same directory.
 
+### Jaeger
+
+```bash
+podman run --rm -p 5775:5775/udp -p 16686:16686 -p 14268 jaegertracing/all-in-one:latest
+```
+
+There is a management console at http://0.0.0.0:16686/
+

@@ -44,3 +44,15 @@ From within each service directory run
 ```bash
    ./mvnw compile quarkus:dev
 ```
+
+## Container dependencies
+
+**Note:** I'm using `podman` to run containers, but the commands used in this demo are completely compatible with `docker`. Just replace `podman` with `docker` or `alias podman='docker'`.
+
+### AMQP
+
+```bash
+podman run -it --rm -p 8161:8161 -p 5672:5672 vromero/activemq-artemis:2.8.0-alpine
+```
+
+There is a management console at http://0.0.0.0:8161/console, you can login using the credentials from the `application.properties` file.

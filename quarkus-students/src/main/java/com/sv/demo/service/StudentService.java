@@ -1,6 +1,7 @@
 package com.sv.demo.service;
 
 import com.sv.demo.dto.Student;
+import io.smallrye.reactive.messaging.amqp.OutgoingAmqpMetadata;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,8 +15,11 @@ import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Gauge;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.eclipse.microprofile.reactive.messaging.Message;
+import org.eclipse.microprofile.reactive.messaging.Metadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 @ApplicationScoped
 public class StudentService {
@@ -56,7 +60,11 @@ public class StudentService {
 
     public Student add(Student student) {
         students.add(student);
-        studentEmitter.send(student.getName());
+        //one could also @Inject a Tracer and get the id from there, but it's rather cumbersome and more hacky than this
+        Metadata metadata = Metadata.of(OutgoingAmqpMetadata.builder()
+                .withCorrelationId(MDC.get("traceId"))
+                .build());
+        studentEmitter.send(Message.of(student.getName(), metadata));
         LOG.info("Added student {}", student.getName());
         return student;
     }
